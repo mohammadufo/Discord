@@ -13,6 +13,7 @@ import {
 import { useNavigate, Routes, Route, BrowserRouter } from 'react-router-dom'
 import RootLayout from './layout/RootLayout.tsx'
 import HomePage from './pages/HomePage.tsx'
+import CreateServerModal from './components/modals/CreateServerModal.tsx'
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -38,6 +39,7 @@ const RouterComponent = () => {
             index={true}
             element={
               <ProtectedRoute>
+                <CreateServerModal />
                 <HomePage />
               </ProtectedRoute>
             }
