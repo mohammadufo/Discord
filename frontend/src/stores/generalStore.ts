@@ -23,7 +23,6 @@ export const useGeneralStore = create<GeneralStore>()(
   persist(
     (set) => ({
       activeModal: null,
-
       setActiveModal: (modal: Modal | null) => set({ activeModal: modal }),
     }),
     {
