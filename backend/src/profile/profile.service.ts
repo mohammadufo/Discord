@@ -7,6 +7,7 @@ export class ProfileService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async createProfile(createProfileDto: CreateProfileDto) {
+    console.log('test!');
     const profile = await this.prismaService.profile.findUnique({
       where: {
         email: createProfileDto.email,
