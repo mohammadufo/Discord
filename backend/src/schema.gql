@@ -2,6 +2,73 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Channel {
+  createdAt: String
+  id: Float!
+  members: [Member!]
+  name: String
+  type: ChannelType!
+  updatedAt: String
+}
+
+"""Defines the type of channel"""
+enum ChannelType {
+  AUDIO
+  TEXT
+  VIDEO
+}
+
+input CreateProfileDto {
+  email: String!
+  imageUrl: String!
+  name: String!
+}
+
+type Member {
+  createdAt: String
+  email: String
+  id: Float!
+  imageUrl: String
+  name: String
+  profile: Profile
+  profileId: Float!
+  role: MemberRole!
+  server: Server
+  updatedAt: String
+}
+
+"""Defines the role of a member on a server"""
+enum MemberRole {
+  ADMIN
+  GUEST
+  MODERATOR
+}
+
+type Mutation {
+  create(input: CreateProfileDto!): Profile!
+}
+
+type Profile {
+  channels: [Channel]
+  email: String
+  id: Float!
+  imageUrl: String!
+  name: String
+  servers: [Server]
+}
+
 type Query {
+  getProfileById(profiledId: Float!): Profile!
   hello: String!
+}
+
+type Server {
+  channels: [Channel!]!
+  id: Float!
+  imageUrl: String!
+  inviteCode: String
+  members: [Member!]
+  name: String!
+  profile: Profile
+  profileId: Float!
 }
