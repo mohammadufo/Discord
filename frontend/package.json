@@ -12,6 +12,7 @@
   "dependencies": {
     "@apollo/client": "^3.10.5",
     "@clerk/clerk-react": "^4.25.1",
+    "@graphql-typed-document-node/core": "^3.2.0",
     "@mantine/carousel": "^7.10.2",
     "@mantine/charts": "^7.10.2",
     "@mantine/code-highlight": "^7.10.2",
@@ -40,6 +41,9 @@
     "zustand": "^4.5.2"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.2",
+    "@graphql-codegen/client-preset": "^4.3.0",
+    "@parcel/watcher": "^2.4.1",
     "@types/node": "^20.14.2",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
@@ -52,6 +56,7 @@
     "postcss": "^8.4.38",
     "postcss-preset-mantine": "^1.15.0",
     "postcss-simple-vars": "^7.0.1",
+    "ts-node": "^10.9.2",
     "typescript": "^5.2.2",
     "vite": "^5.2.0"
   }
