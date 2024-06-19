@@ -9,12 +9,12 @@ import { GraphqlAuthGuard } from 'src/auth/auth.guard';
 export class ProfileResolver {
   constructor(private readonly profileService: ProfileService) {}
 
-  @UseGuards(GraphqlAuthGuard)
   @Mutation(() => Profile)
   async createProfile(@Args('input') input: CreateProfileDto) {
     return this.profileService.createProfile(input);
   }
 
+  @UseGuards(GraphqlAuthGuard)
   @Query(() => Profile)
   async getProfileById(@Args('profileId') profileId: number) {
     return this.profileService.getProfileById(profileId);
