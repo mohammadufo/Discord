@@ -1,9 +1,13 @@
 import { setContext } from '@apollo/client/link/context'
-//@ts-ignore
+// @ts-ignore
 import { createUploadLink } from 'apollo-upload-client'
 import { onError } from '@apollo/client/link/error'
 import { InMemoryCache } from '@apollo/client/cache'
 import { ApolloClient } from '@apollo/client/core'
+import { loadErrorMessages, loadDevMessages } from '@apollo/client/dev'
+
+loadDevMessages()
+loadErrorMessages()
 
 const getToken = (name: string) => {
   const value = `; ${document.cookie}`

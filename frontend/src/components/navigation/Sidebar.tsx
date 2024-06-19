@@ -17,28 +17,28 @@ const Sidebar = () => {
     <div>
       Alaa💕🤍
       <nav className={classes.navbar}>
-        <Center>
-          <Button
-            className={classes.link}
-            variant="subtle"
-            radius={100}
-            onClick={createServerModal.openModal}
-          >
-            <IconPlus radius={100} />
-          </Button>
-        </Center>
-        <Center>
-          <Button
-            className={classes.link}
-            variant="subtle"
-            radius={100}
-            onClick={() => {}}
-          >
-            <IconArrowsJoin />
-          </Button>
-        </Center>
-
         <Stack justify="center" align="center">
+          <Center>
+            <Button
+              className={classes.link}
+              variant="subtle"
+              radius={100}
+              onClick={createServerModal.openModal}
+            >
+              <IconPlus radius={100} />
+            </Button>
+          </Center>
+          <Center>
+            <Button
+              className={classes.link}
+              variant="subtle"
+              radius={100}
+              onClick={() => {}}
+            >
+              <IconArrowsJoin />
+            </Button>
+          </Center>
+
           <Button
             className={classes.link}
             onClick={toggleColorScheme}
@@ -52,6 +52,7 @@ const Sidebar = () => {
               <IconSun radius={100} />
             )}
           </Button>
+          <UserButton />
         </Stack>
       </nav>
     </div>
