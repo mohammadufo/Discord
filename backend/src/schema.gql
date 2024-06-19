@@ -45,7 +45,7 @@ enum MemberRole {
 }
 
 type Mutation {
-  create(input: CreateProfileDto!): Profile!
+  createProfile(input: CreateProfileDto!): Profile!
 }
 
 type Profile {
@@ -58,7 +58,7 @@ type Profile {
 }
 
 type Query {
-  getProfileById(profiledId: Float!): Profile!
+  getProfileById(profileId: Float!): Profile!
   hello: String!
 }
 
