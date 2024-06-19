@@ -1,6 +1,5 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import App from './App.tsx'
 import './index.css'
 import { MantineProvider } from '@mantine/core'
 import '@mantine/core/styles.css'
@@ -14,7 +13,8 @@ import { useNavigate, Routes, Route, BrowserRouter } from 'react-router-dom'
 import RootLayout from './layout/RootLayout.tsx'
 import HomePage from './pages/HomePage.tsx'
 import CreateServerModal from './components/modals/CreateServerModal.tsx'
-
+import { ApolloProvider } from '@apollo/client'
+import client from './apolloClient.ts'
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
@@ -53,9 +53,11 @@ const RouterComponent = () => {
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <MantineProvider>
-      <BrowserRouter>
-        <RouterComponent />
-      </BrowserRouter>
+      <ApolloProvider client={client}>
+        <BrowserRouter>
+          <RouterComponent />
+        </BrowserRouter>
+      </ApolloProvider>
     </MantineProvider>
   </React.StrictMode>
 )
