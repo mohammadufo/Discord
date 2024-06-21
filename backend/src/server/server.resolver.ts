@@ -4,6 +4,7 @@ import { UseGuards } from '@nestjs/common';
 import { GraphqlAuthGuard } from 'src/auth/auth.guard';
 import { ApolloError } from 'apollo-server-express';
 import { ServerService } from './server.service';
+import { IUpdatedRequest } from '../types/index';
 
 @UseGuards(GraphqlAuthGuard)
 @Resolver()
@@ -16,7 +17,7 @@ export class ServerResolver {
   }
 
   @Query(() => [Server])
-  async getServers(@Context() ctx: { req: Request }) {
+  async getServers(@Context() ctx: { req: IUpdatedRequest }) {
     if (!ctx.req?.profile.email)
       return new ApolloError('Profile not found', 'PROFILE_NOT_FOUND');
 
