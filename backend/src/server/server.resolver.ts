@@ -25,10 +25,19 @@ export class ServerResolver {
   async getServers(@Context() ctx: { req: IUpdatedRequest }) {
     if (!ctx.req?.profile.email)
       return new ApolloError('Profile not found', 'PROFILE_NOT_FOUND');
-
     return await this.serverService.getServersByProfileEmailOfMember(
       ctx.req?.profile.email,
     );
+  }
+
+  @Query(() => Server)
+  async getServer(
+    @Context() ctx: { req: IUpdatedRequest },
+    @Args('id', { nullable: true }) id: number,
+  ) {
+    if (!ctx.req?.profile.email)
+      return new ApolloError('Profile not found', 'PROFILE_NOT_FOUND');
+    return this.serverService.getServer(id, ctx.req?.profile.email);
   }
 
   @Mutation(() => Server)
@@ -37,13 +46,10 @@ export class ServerResolver {
     @Args('file', { type: () => GraphQLUpload, nullable: true })
     file: GraphQLUpload,
   ) {
-    let imageUrl;
+    if (!file) throw new ApolloError('Image is required', 'IMAGE_REQUIRED');
+    const imageUrl = await this.storeImageAndGetUrl(file);
 
-    if (file) {
-      imageUrl = await this.storeImageAndGetUrl(file);
-    }
-
-    return this.serverService.createServer(input, file);
+    return this.serverService.createServer(input, imageUrl);
   }
 
   async storeImageAndGetUrl(file: GraphQLUpload) {

@@ -1,29 +1,29 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+
 import { PrismaService } from 'src/prisma.service';
 import { CreateProfileDto } from './dtos/create-profile.dto';
 
 @Injectable()
 export class ProfileService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async createProfile(createProfileDto: CreateProfileDto) {
-    const profile = await this.prismaService.profile.findUnique({
+    const profile = await this.prisma.profile.findUnique({
       where: {
         email: createProfileDto.email,
       },
     });
-
     if (profile) {
-      throw new BadRequestException('This Email is already exist!');
+      return profile;
     }
 
-    return this.prismaService.profile.create({
+    return this.prisma.profile.create({
       data: createProfileDto,
     });
   }
 
   async getProfileById(id: number) {
-    return this.prismaService.profile.findUnique({
+    return this.prisma.profile.findUnique({
       where: {
         id,
       },
@@ -38,7 +38,7 @@ export class ProfileService {
   }
 
   async getProfileByEmail(email: string) {
-    return this.prismaService.profile.findUnique({
+    return this.prisma.profile.findUnique({
       where: {
         email,
       },

@@ -14,7 +14,6 @@ export class ProfileResolver {
     return this.profileService.createProfile(input);
   }
 
-  @UseGuards(GraphqlAuthGuard)
   @Query(() => Profile)
   async getProfileById(@Args('profileId') profileId: number) {
     return this.profileService.getProfileById(profileId);

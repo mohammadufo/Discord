@@ -4,23 +4,19 @@ import { CreateServerDto } from './dtos/create-server.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { MemberRole } from 'src/member/member.types';
 import { ApolloError } from 'apollo-server-express';
-
 @Injectable()
 export class ServerService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async createServer(input: CreateServerDto, imageUrl: string) {
-    const profile = await this.prismaService.profile.findUnique({
+    const profile = await this.prisma.profile.findUnique({
       where: {
         id: input.profileId,
       },
     });
+    if (!profile) throw new BadRequestException('Profile not found');
 
-    if (!profile) {
-      throw new BadRequestException('Profile not found!');
-    }
-
-    return this.prismaService.server.create({
+    return this.prisma.server.create({
       data: {
         ...input,
         imageUrl,
@@ -43,6 +39,7 @@ export class ServerService {
           ],
         },
       },
+
       include: {
         members: true,
       },
@@ -50,17 +47,14 @@ export class ServerService {
   }
 
   async getServer(id: number, email: string) {
-    const profile = await this.prismaService.profile.findUnique({
-      where: {
-        email,
-      },
+    const profile = await this.prisma.profile.findUnique({
+      where: { email },
     });
 
-    if (!profile) {
+    if (!profile)
       return new ApolloError('Profile not found', 'PROFILE_NOT_FOUND');
-    }
 
-    const server = await this.prismaService.server.findUnique({
+    const server = await this.prisma.server.findUnique({
       where: {
         id,
         members: {
@@ -69,17 +63,36 @@ export class ServerService {
           },
         },
       },
+      include: {
+        channels: true,
+        members: {
+          include: {
+            profile: true,
+            server: true,
+          },
+        },
+      },
     });
-
-    if (!server) {
-      return new ApolloError('Server not found', 'SERVER_NOT_FOUND');
-    }
-
+    if (!server) return new ApolloError('Server not found', 'SERVER_NOT_FOUND');
     return server;
   }
 
   async getServersByProfileEmailOfMember(email: string) {
-    return this.prismaService.server.findMany({
+    console.log(
+      email,
+      await this.prisma.server.findMany({
+        where: {
+          members: {
+            some: {
+              profile: {
+                email,
+              },
+            },
+          },
+        },
+      }),
+    );
+    return await this.prisma.server.findMany({
       where: {
         members: {
           some: {

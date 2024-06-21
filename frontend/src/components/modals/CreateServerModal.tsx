@@ -9,10 +9,10 @@ import {
   TextInput,
   rem,
 } from '@mantine/core'
-import { Dropzone, DropzoneProps, IMAGE_MIME_TYPE } from '@mantine/dropzone'
+import React from 'react'
 import { useModal } from '../../hooks/useModal'
 import { useForm } from '@mantine/form'
-import { useState } from 'react'
+import { Dropzone, DropzoneProps, IMAGE_MIME_TYPE } from '@mantine/dropzone'
 import classes from './CreateServerModal.module.css'
 import { IconUpload, IconX } from '@tabler/icons-react'
 import { useMutation } from '@apollo/client'
@@ -20,18 +20,17 @@ import {
   CreateServerMutation,
   CreateServerMutationVariables,
 } from '../../gql/graphql'
+import { useProfileStore } from '../../stores/profileStore'
 import { CREATE_SERVER } from '../../graphql/mutations/server/createServer'
-
-const CreateServerModal = () => {
+function CreateServerModal() {
   const { isOpen, closeModal } = useModal('CreateServer')
-
-  const [imagePreview, setImagePreview] = useState<string | null>(null)
-  const [file, setFile] = useState<File | null>(null)
 
   const [createServer, { loading, error }] = useMutation<
     CreateServerMutation,
     CreateServerMutationVariables
   >(CREATE_SERVER)
+
+  const profileId = useProfileStore((state) => state.profile?.id)
 
   const form = useForm({
     initialValues: {
@@ -41,7 +40,31 @@ const CreateServerModal = () => {
       name: (value) => !value.trim() && 'Please enter a name.',
     },
   })
+  const onSubmit = () => {
+    if (!form.validate()) return
 
+    console.log('profileId --->', profileId)
+
+    createServer({
+      variables: {
+        input: {
+          name: form.values.name,
+          profileId,
+        },
+        file,
+      },
+      onCompleted: () => {
+        setImagePreview(null)
+        setFile(null)
+        form.reset
+        closeModal()
+      },
+
+      refetchQueries: ['GetServers'],
+    })
+  }
+
+  const [file, setFile] = React.useState<File | null>(null)
   const handleDropzoneChange: DropzoneProps['onDrop'] = (files) => {
     if (files.length === 0) {
       return setImagePreview(null)
@@ -53,15 +76,14 @@ const CreateServerModal = () => {
     setFile(files[0])
     reader.readAsDataURL(files[0])
   }
-
+  const [imagePreview, setImagePreview] = React.useState<string | null>(null)
   return (
-    <Modal opened={isOpen} onClose={closeModal} title="Create a Server!">
+    <Modal title="Create a server" opened={isOpen} onClose={closeModal}>
       <Text c="dimmed">
         Give your server a personality with a name and an image. You can always
         change it later.
       </Text>
-
-      <form onSubmit={form.onSubmit(() => {})}>
+      <form onSubmit={form.onSubmit(() => onSubmit())}>
         <Stack>
           <Flex justify="center" align="center" direction={'column'}>
             {!imagePreview && (
@@ -95,10 +117,14 @@ const CreateServerModal = () => {
                     <Text size="sm" c="dimmed" inline mt={7}>
                       Upload a server icon
                     </Text>
+                    {error?.message && !file && (
+                      <Text c="red">{error?.message}</Text>
+                    )}
                   </Stack>
                 </Group>
               </Dropzone>
             )}
+
             {imagePreview && (
               <Flex pos="relative" w={rem(150)} h={rem(150)} mt="md">
                 <>
@@ -131,7 +157,6 @@ const CreateServerModal = () => {
               </Flex>
             )}
           </Flex>
-
           <TextInput
             label="Server name"
             placeholder="Enter server name"
@@ -139,7 +164,7 @@ const CreateServerModal = () => {
             error={form.errors.name}
           />
           <Button
-            disabled={!!form.errors.name}
+            disabled={!!form.errors.name || loading}
             w={'50%'}
             type="submit"
             variant="gradient"

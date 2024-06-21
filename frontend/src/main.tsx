@@ -10,7 +10,7 @@ import {
   ClerkProvider,
 } from '@clerk/clerk-react'
 import { useNavigate, Routes, Route, BrowserRouter } from 'react-router-dom'
-import RootLayout from './layout/RootLayout.tsx'
+import RouteLayout from './layout/RouteLayout.tsx'
 import HomePage from './pages/HomePage.tsx'
 import CreateServerModal from './components/modals/CreateServerModal.tsx'
 import { ApolloProvider } from '@apollo/client'
@@ -34,7 +34,7 @@ const RouterComponent = () => {
       navigate={(to) => navigate(to)}
     >
       <Routes>
-        <Route path="" element={<RootLayout />}>
+        <Route path="" element={<RouteLayout />}>
           <Route
             index={true}
             element={

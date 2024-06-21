@@ -1,3 +1,4 @@
+import React, { useEffect } from 'react'
 import { Outlet } from 'react-router-dom'
 import Sidebar from '../components/navigation/Sidebar'
 import { useProfileStore } from '../stores/profileStore'
@@ -8,23 +9,22 @@ import {
   CreateProfileMutationVariables,
 } from '../gql/graphql'
 import { CREATE_PROFILE } from '../graphql/mutations/CreateProfile'
-import { useEffect } from 'react'
 
-const RootLayout = () => {
+function RouteLayout() {
   const profile = useProfileStore((state) => state.profile)
-  const setProfile = useProfileStore((state) => state.setProfile)
-  const { isSignedIn } = useAuth()
+
   const { session } = useSession()
 
   const [createProfile] = useMutation<
     CreateProfileMutation,
     CreateProfileMutationVariables
   >(CREATE_PROFILE, {})
+  const { isSignedIn } = useAuth()
+  const setProfile = useProfileStore((state) => state.setProfile)
 
   useEffect(() => {
     if (!isSignedIn) setProfile(null)
   }, [isSignedIn, setProfile])
-
   useEffect(() => {
     const createProfileFn = async () => {
       if (!session?.user) return
@@ -38,8 +38,10 @@ const RootLayout = () => {
             },
           },
           onCompleted: (data) => {
+            console.log('data --->', data)
             setProfile(data.createProfile)
           },
+          refetchQueries: ['GetServers'],
         })
       } catch (err) {
         console.log('Error creating profile in backend: ', err)
@@ -57,4 +59,4 @@ const RootLayout = () => {
   )
 }
 
-export default RootLayout
+export default RouteLayout
