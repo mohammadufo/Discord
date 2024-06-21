@@ -43,20 +43,18 @@ function CreateServerModal() {
   const onSubmit = () => {
     if (!form.validate()) return
 
-    console.log('profileId --->', profileId)
-
     createServer({
       variables: {
         input: {
           name: form.values.name,
-          profileId,
+          profileId: profileId!,
         },
         file,
       },
       onCompleted: () => {
         setImagePreview(null)
         setFile(null)
-        form.reset
+        form.reset()
         closeModal()
       },
 
