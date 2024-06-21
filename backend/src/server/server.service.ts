@@ -14,7 +14,9 @@ export class ServerService {
         id: input.profileId,
       },
     });
-    if (!profile) throw new BadRequestException('Profile not found');
+    if (!profile) {
+      throw new BadRequestException('Profile not found');
+    }
 
     return this.prisma.server.create({
       data: {
@@ -52,7 +54,7 @@ export class ServerService {
     });
 
     if (!profile)
-      return new ApolloError('Profile not found', 'PROFILE_NOT_FOUND');
+      return new ApolloError('Profile not found!!!', 'PROFILE_NOT_FOUND');
 
     const server = await this.prisma.server.findUnique({
       where: {

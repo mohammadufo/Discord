@@ -23,8 +23,6 @@ export class ServerResolver {
 
   @Query(() => [Server])
   async getServers(@Context() ctx: { req: IUpdatedRequest }) {
-    if (!ctx.req?.profile.email)
-      return new ApolloError('Profile not found', 'PROFILE_NOT_FOUND');
     return await this.serverService.getServersByProfileEmailOfMember(
       ctx.req?.profile.email,
     );
