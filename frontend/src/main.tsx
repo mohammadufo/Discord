@@ -18,6 +18,7 @@ import client from './apolloClient.ts'
 import CreateChannelModal from './components/modals/CreateChannelModal.tsx'
 import ChannelLayout from './layout/ChannelLayout.tsx'
 import ChannelPage from './pages/ChannelPage.tsx'
+import ServerLayout from './layout/ServerLayout.tsx'
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
@@ -48,6 +49,18 @@ const RouterComponent = () => {
             }
           />
         </Route>
+
+        <Route path="servers/:serverId" element={<ServerLayout />}>
+          <Route
+            index
+            element={
+              <ProtectedRoute>
+                <CreateChannelModal />
+              </ProtectedRoute>
+            }
+          />
+        </Route>
+
         <Route
           path="servers/:serverId/channels/:channelType/:channelId"
           element={<ChannelLayout />}
