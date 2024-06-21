@@ -77,4 +77,18 @@ export class ServerService {
 
     return server;
   }
+
+  async getServersByProfileEmailOfMember(email: string) {
+    return this.prismaService.server.findMany({
+      where: {
+        members: {
+          some: {
+            profile: {
+              email,
+            },
+          },
+        },
+      },
+    });
+  }
 }
