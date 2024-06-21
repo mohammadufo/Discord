@@ -59,6 +59,7 @@ type Profile {
 
 type Query {
   getProfileById(profileId: Float!): Profile!
+  getServers: [Server!]!
   hello: String!
 }
 
