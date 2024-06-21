@@ -1,6 +1,15 @@
 import { UserButton } from '@clerk/clerk-react'
 import classes from './Sidebar.module.css'
-import { Button, Center, Stack, useMantineColorScheme } from '@mantine/core'
+import {
+  Button,
+  Center,
+  Image,
+  Stack,
+  Tooltip,
+  UnstyledButton,
+  rem,
+  useMantineColorScheme,
+} from '@mantine/core'
 import {
   IconArrowsJoin,
   IconMoon,
@@ -8,16 +17,59 @@ import {
   IconSun,
 } from '@tabler/icons-react'
 import { useModal } from '../../hooks/useModal'
+import { useServers } from '../../hooks/graphql/server/useServers'
+import { useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+
+interface NavbarLinkProps {
+  label: string
+  active?: boolean
+  imageUrl: string
+  onClick?: () => void
+}
+
+function NavbarLink({ imageUrl, label, active, onClick }: NavbarLinkProps) {
+  return (
+    <Tooltip label={label} position="right">
+      <UnstyledButton
+        onClick={onClick}
+        data-active={active || undefined}
+        style={{ borderRadius: rem(100) }}
+      >
+        <Image src={imageUrl} w={rem(50)} h={rem(50)} radius={100} />
+      </UnstyledButton>
+    </Tooltip>
+  )
+}
 
 const Sidebar = () => {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme()
   const createServerModal = useModal('CreateServer')
 
+  const [active, setActive] = useState(0)
+
+  const { servers, loading } = useServers()
+
+  const navigate = useNavigate()
+
+  const links = servers?.map((server, index) => (
+    <NavbarLink
+      label={server?.name}
+      imageUrl={server.imageUrl}
+      key={server.id}
+      active={active === index}
+      onClick={() => {
+        setActive(index)
+        navigate(`/servers/${server.id}`)
+      }}
+    />
+  ))
+
   return (
-    <div>
+    <>
       Alaa💕🤍
       <nav className={classes.navbar}>
-        <Stack justify="center" align="center">
+        <Stack>
           <Center>
             <Button
               className={classes.link}
@@ -30,19 +82,24 @@ const Sidebar = () => {
           </Center>
           <Center>
             <Button
+              // onClick={serverJoinModal.openModal}
               className={classes.link}
               variant="subtle"
               radius={100}
-              onClick={() => {}}
             >
-              <IconArrowsJoin />
+              <IconArrowsJoin radius={100} />
             </Button>
           </Center>
+          <Stack justify="center" gap="md" mt="xl">
+            {links}
+          </Stack>
+        </Stack>
 
+        <Stack justify="center" align="center">
           <Button
             className={classes.link}
-            onClick={toggleColorScheme}
             variant="subtle"
+            onClick={toggleColorScheme}
             radius={100}
             p={0}
           >
@@ -55,7 +112,7 @@ const Sidebar = () => {
           <UserButton />
         </Stack>
       </nav>
-    </div>
+    </>
   )
 }
 
