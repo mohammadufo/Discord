@@ -15,12 +15,23 @@ import { useForm } from '@mantine/form'
 import { useState } from 'react'
 import classes from './CreateServerModal.module.css'
 import { IconUpload, IconX } from '@tabler/icons-react'
+import { useMutation } from '@apollo/client'
+import {
+  CreateServerMutation,
+  CreateServerMutationVariables,
+} from '../../gql/graphql'
+import { CREATE_SERVER } from '../../graphql/mutations/server/createServer'
 
 const CreateServerModal = () => {
   const { isOpen, closeModal } = useModal('CreateServer')
 
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [file, setFile] = useState<File | null>(null)
+
+  const [createServer, { loading, error }] = useMutation<
+    CreateServerMutation,
+    CreateServerMutationVariables
+  >(CREATE_SERVER)
 
   const form = useForm({
     initialValues: {
