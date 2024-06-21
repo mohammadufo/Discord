@@ -33,8 +33,6 @@ export class ServerResolver {
     @Context() ctx: { req: IUpdatedRequest },
     @Args('id', { nullable: true }) id: number,
   ) {
-    if (!ctx.req?.profile.email)
-      return new ApolloError('Profile not found', 'PROFILE_NOT_FOUND');
     return this.serverService.getServer(id, ctx.req?.profile.email);
   }
 

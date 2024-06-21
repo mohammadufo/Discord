@@ -53,8 +53,9 @@ export class ServerService {
       where: { email },
     });
 
-    if (!profile)
+    if (!profile) {
       return new ApolloError('Profile not found!!!', 'PROFILE_NOT_FOUND');
+    }
 
     const server = await this.prisma.server.findUnique({
       where: {
