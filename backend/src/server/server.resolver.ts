@@ -31,6 +31,21 @@ export class ServerResolver {
     );
   }
 
+  @Mutation(() => Server)
+  async createServer(
+    @Args('input') input: CreateServerDto,
+    @Args('file', { type: () => GraphQLUpload, nullable: true })
+    file: GraphQLUpload,
+  ) {
+    let imageUrl;
+
+    if (file) {
+      imageUrl = await this.storeImageAndGetUrl(file);
+    }
+
+    return this.serverService.createServer(input, file);
+  }
+
   async storeImageAndGetUrl(file: GraphQLUpload) {
     const { createReadStream, filename } = await file;
     const uniqueFilename = `${uuidv4()}_${filename}`;

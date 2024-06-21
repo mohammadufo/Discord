@@ -24,6 +24,11 @@ input CreateProfileDto {
   name: String!
 }
 
+input CreateServerDto {
+  name: String!
+  profileId: Float!
+}
+
 type Member {
   createdAt: String
   email: String
@@ -46,6 +51,7 @@ enum MemberRole {
 
 type Mutation {
   createProfile(input: CreateProfileDto!): Profile!
+  createServer(file: Upload, input: CreateServerDto!): Server!
 }
 
 type Profile {
@@ -73,3 +79,6 @@ type Server {
   profile: Profile
   profileId: Float!
 }
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
