@@ -3,6 +3,7 @@ import { PrismaService } from 'src/prisma.service';
 import { CreateServerDto } from './dtos/create-server.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { MemberRole } from 'src/member/member.types';
+import { ApolloError } from 'apollo-server-express';
 
 @Injectable()
 export class ServerService {
@@ -46,5 +47,34 @@ export class ServerService {
         members: true,
       },
     });
+  }
+
+  async getServer(id: number, email: string) {
+    const profile = await this.prismaService.profile.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    if (!profile) {
+      return new ApolloError('Profile not found', 'PROFILE_NOT_FOUND');
+    }
+
+    const server = await this.prismaService.server.findUnique({
+      where: {
+        id,
+        members: {
+          some: {
+            profileId: profile.id,
+          },
+        },
+      },
+    });
+
+    if (!server) {
+      return new ApolloError('Server not found', 'SERVER_NOT_FOUND');
+    }
+
+    return server;
   }
 }
