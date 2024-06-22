@@ -1,6 +1,6 @@
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Server } from './types';
-import { UseGuards } from '@nestjs/common';
+import { UnauthorizedException, UseGuards } from '@nestjs/common';
 import { GraphqlAuthGuard } from 'src/auth/auth.guard';
 import { ApolloError } from 'apollo-server-express';
 import { ServerService } from './server.service';
@@ -23,6 +23,9 @@ export class ServerResolver {
 
   @Query(() => [Server])
   async getServers(@Context() ctx: { req: IUpdatedRequest }) {
+    if (!ctx.req?.profile.email) {
+      throw new UnauthorizedException('Token is not valid!');
+    }
     return await this.serverService.getServersByProfileEmailOfMember(
       ctx.req?.profile.email,
     );
@@ -33,6 +36,9 @@ export class ServerResolver {
     @Context() ctx: { req: IUpdatedRequest },
     @Args('id', { nullable: true }) id: number,
   ) {
+    if (!ctx.req?.profile.email) {
+      throw new UnauthorizedException('Token is not valid!');
+    }
     return this.serverService.getServer(id, ctx.req?.profile.email);
   }
 

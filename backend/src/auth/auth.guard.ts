@@ -24,9 +24,10 @@ export class GraphqlAuthGuard implements CanActivate {
         publicKey: process.env.JWT_PUBLIC_KEY,
         algorithms: ['RS256'],
       });
+
       request['profile'] = payload;
     } catch (err) {
-      throw new UnauthorizedException('Not authorized!');
+      throw new UnauthorizedException('Not authorized!!!!');
     }
     return true;
   }
