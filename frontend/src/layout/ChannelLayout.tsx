@@ -1,10 +1,10 @@
 import { Outlet } from 'react-router-dom'
-import ServerSidebar from '../components/navigation/ServerSidebar'
+import MobileSidebar from '../components/navigation/MobileSidebar'
 
 function ChannelLayout() {
   return (
     <div>
-      <ServerSidebar />
+      <MobileSidebar />
       <Outlet />
     </div>
   )

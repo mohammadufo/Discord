@@ -17,6 +17,8 @@ export type Modal =
 interface GeneralStore {
   activeModal: Modal | null
   setActiveModal: (modal: Modal | null) => void
+  drawerOpen: boolean
+  toggleDrawer: () => void
 }
 
 export const useGeneralStore = create<GeneralStore>()(
@@ -24,6 +26,8 @@ export const useGeneralStore = create<GeneralStore>()(
     (set) => ({
       activeModal: null,
       setActiveModal: (modal: Modal | null) => set({ activeModal: modal }),
+      drawerOpen: false,
+      toggleDrawer: () => set((state) => ({ drawerOpen: !state.drawerOpen })),
     }),
     {
       name: 'general-store',
