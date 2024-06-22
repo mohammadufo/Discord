@@ -51,7 +51,7 @@ export function useServer() {
   )?.role
 
   return {
-    server: dataServer?.getServer,
+    server: dataServer?.getServer as any,
     loading,
     textChannels,
     audioChannels,

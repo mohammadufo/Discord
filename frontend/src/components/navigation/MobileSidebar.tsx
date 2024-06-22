@@ -6,7 +6,6 @@ import ServerSidebar from './ServerSidebar'
 
 function MobileSidebar() {
   const { drawerOpen, toggleDrawer } = useGeneralStore((state) => state)
-  console.log('mobile sidebar')
   return (
     <>
       <Sidebar />

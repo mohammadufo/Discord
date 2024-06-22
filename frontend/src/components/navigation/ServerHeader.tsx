@@ -1,4 +1,6 @@
-import { Flex, Menu, Text, rem } from '@mantine/core'
+import { Divider, Flex, Menu, Text, rem } from '@mantine/core'
+
+import { MemberRole, Server } from '../../gql/graphql'
 import {
   IconArrowAutofitDown,
   IconPlus,
@@ -7,54 +9,91 @@ import {
   IconUsers,
   IconX,
 } from '@tabler/icons-react'
+import { useModal } from '../../hooks/useModal'
 
-function ServerHeader() {
+function ServerHeader({
+  server,
+  memberRole,
+}: {
+  server: Server
+  memberRole: MemberRole
+}) {
+  const isAdmin = memberRole === MemberRole.Admin
+  const isModerator = memberRole === MemberRole.Moderator || isAdmin
+
+  const inviteModal = useModal('InvitePeople')
+  const updateServerModal = useModal('UpdateServer')
+
+  const createChannelModal = useModal('CreateChannel')
+  const deleteServerModal = useModal('DeleteServer')
+
+  const mangeMemberModal = useModal('ManageMembers')
+  const leaveServerModal = useModal('LeaveServer')
+
   return (
-    <div>
-      <Menu shadow="md" width={rem(300)}>
-        <Menu.Target>
-          <Flex
-            p="md"
-            justify={'space-between'}
-            align="center"
-            w="100%"
-            style={{ cursor: 'pointer' }}
+    <Menu shadow="md" width={rem(300)}>
+      <Menu.Target>
+        <Flex
+          p="md"
+          justify={'space-between'}
+          align="center"
+          w="100%"
+          style={{ cursor: 'pointer' }}
+        >
+          {server?.name} <IconArrowAutofitDown />
+        </Flex>
+      </Menu.Target>
+
+      <Menu.Dropdown>
+        <Menu.Item onClick={inviteModal.openModal} rightSection={<IconPlus />}>
+          Invite People
+        </Menu.Item>
+
+        {isAdmin && (
+          <Menu.Item
+            onClick={updateServerModal.openModal}
+            rightSection={<IconSettings />}
           >
-            <IconArrowAutofitDown />
-          </Flex>
-        </Menu.Target>
-
-        <Menu.Dropdown>
-          <Menu.Item onClick={() => {}} rightSection={<IconPlus />}>
-            Invite People
-          </Menu.Item>
-
-          <Menu.Item onClick={() => {}} rightSection={<IconSettings />}>
             Update Server
           </Menu.Item>
-
-          <Menu.Item onClick={() => {}} rightSection={<IconUsers />}>
+        )}
+        {isAdmin && (
+          <Menu.Item
+            onClick={mangeMemberModal.openModal}
+            rightSection={<IconUsers />}
+          >
             Manage Members
           </Menu.Item>
-
-          <Menu.Item onClick={() => {}} rightSection={<IconPlus />}>
+        )}
+        {isModerator && (
+          <Menu.Item
+            onClick={createChannelModal.openModal}
+            rightSection={<IconPlus />}
+          >
             Create Channel
           </Menu.Item>
-
+        )}
+        {isModerator && <Divider />}
+        {isAdmin && (
           <Menu.Item
-            onClick={() => {}}
+            onClick={deleteServerModal.openModal}
             color="red"
             rightSection={<IconTrash />}
           >
             <Text>Delete Server</Text>
           </Menu.Item>
-
-          <Menu.Item onClick={() => {}} color="red" rightSection={<IconX />}>
+        )}
+        {!isAdmin && (
+          <Menu.Item
+            onClick={leaveServerModal.openModal}
+            color="red"
+            rightSection={<IconX />}
+          >
             <Text>Leave Server</Text>
           </Menu.Item>
-        </Menu.Dropdown>
-      </Menu>
-    </div>
+        )}
+      </Menu.Dropdown>
+    </Menu>
   )
 }
 

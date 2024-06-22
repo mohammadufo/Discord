@@ -18,9 +18,11 @@ function ServerSidebar() {
     }
   })
 
+  if (!server || !role) return null
+
   return (
     <nav className={classes.nav}>
-      <ServerHeader />
+      <ServerHeader server={server!} memberRole={role} />
       {/* ServerSearch */}
       <ScrollArea></ScrollArea>
     </nav>
