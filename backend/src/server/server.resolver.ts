@@ -10,6 +10,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { join } from 'path';
 import { createWriteStream, existsSync, mkdirSync } from 'fs';
 import { CreateServerDto } from './dtos/create-server.dto';
+import { UpdateServerDto } from './dtos/update-server.dto';
 
 @UseGuards(GraphqlAuthGuard)
 @Resolver()
@@ -67,6 +68,24 @@ export class ServerResolver {
     const readStream = createReadStream();
     readStream.pipe(createWriteStream(imagePath));
     return imageUrl;
+  }
+
+  @Mutation(() => Server)
+  async updateServer(
+    @Args('input') input: UpdateServerDto,
+    @Args('file', { type: () => GraphQLUpload, nullable: true })
+    file: GraphQLUpload,
+  ) {
+    let imageUrl;
+
+    if (file) {
+      imageUrl = await this.storeImageAndGetUrl(file);
+    }
+    try {
+      return this.serverService.updateServer(input, imageUrl);
+    } catch (err) {
+      throw new ApolloError(err.message, err.code);
+    }
   }
 
   @Mutation(() => Server)

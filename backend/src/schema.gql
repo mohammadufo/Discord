@@ -52,6 +52,7 @@ enum MemberRole {
 type Mutation {
   createProfile(input: CreateProfileDto!): Profile!
   createServer(file: Upload, input: CreateServerDto!): Server!
+  updateServer(file: Upload, input: UpdateServerDto!): Server!
   updateServerWithNewInviteCode(serverId: Float): Server!
 }
 
@@ -80,6 +81,11 @@ type Server {
   name: String!
   profile: Profile
   profileId: Float!
+}
+
+input UpdateServerDto {
+  name: String!
+  serverId: Float
 }
 
 """The `Upload` scalar type represents a file upload."""
