@@ -11,6 +11,7 @@ import { join } from 'path';
 import { createWriteStream, existsSync, mkdirSync } from 'fs';
 import { CreateServerDto } from './dtos/create-server.dto';
 import { UpdateServerDto } from './dtos/update-server.dto';
+import { CreateChannelOnServerDto } from './dtos/create-channel.dto';
 
 @UseGuards(GraphqlAuthGuard)
 @Resolver()
@@ -96,6 +97,18 @@ export class ServerResolver {
       throw new ApolloError('Server id is required', 'SERVER_ID_REQUIRED');
     try {
       return this.serverService.updateServerWithNewInviteCode(serverId);
+    } catch (err) {
+      throw new ApolloError(err.message, err.code);
+    }
+  }
+
+  @Mutation(() => Server)
+  async createChannel(
+    @Args('input') input: CreateChannelOnServerDto,
+    @Context() ctx: { req: IUpdatedRequest },
+  ) {
+    try {
+      return this.serverService.createChannel(input, ctx.req?.profile.email);
     } catch (err) {
       throw new ApolloError(err.message, err.code);
     }
