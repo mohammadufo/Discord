@@ -52,6 +52,7 @@ enum MemberRole {
 type Mutation {
   createProfile(input: CreateProfileDto!): Profile!
   createServer(file: Upload, input: CreateServerDto!): Server!
+  updateServerWithNewInviteCode(serverId: Float): Server!
 }
 
 type Profile {

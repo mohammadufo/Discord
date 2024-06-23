@@ -68,4 +68,17 @@ export class ServerResolver {
     readStream.pipe(createWriteStream(imagePath));
     return imageUrl;
   }
+
+  @Mutation(() => Server)
+  async updateServerWithNewInviteCode(
+    @Args('serverId', { nullable: true }) serverId: number,
+  ) {
+    if (!serverId)
+      throw new ApolloError('Server id is required', 'SERVER_ID_REQUIRED');
+    try {
+      return this.serverService.updateServerWithNewInviteCode(serverId);
+    } catch (err) {
+      throw new ApolloError(err.message, err.code);
+    }
+  }
 }
