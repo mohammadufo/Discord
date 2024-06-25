@@ -67,6 +67,8 @@ function InviteModal() {
         <Button
           disabled={loading}
           onClick={() => updateServerWithNewInviteCode()}
+          variant="gradient"
+          gradient={{ from: 'violet', to: 'teal', deg: 90 }}
         >
           <Text mr="md">Generate New Invite Code</Text>
         </Button>
